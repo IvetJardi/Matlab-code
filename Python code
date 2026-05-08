@@ -1,1 +1,32 @@
 
+import random
+
+C = ['0', '1', '00', '01', '10', '11', '000', '001']
+n_sim = 10000
+pf_count = 0
+ud_count = 0
+
+for _ in range(n_sim):
+    # Randomly assign one codeword per symbol (4 symbols)
+    codewords = [random.choice(C) for _ in range(4)]
+    
+    # Check prefix-free
+    pf = True
+    for a in range(4):
+        for b in range(4):
+            if a != b:
+                ca = codewords[a]
+                cb = codewords[b]
+                if len(ca) < len(cb) and cb[:len(ca)] == ca:
+                    pf = False
+
+    # Uniquely decodable: prefix-free AND all 4 codewords distinct
+    ud = pf and len(set(codewords)) == 4
+
+    if pf:
+        pf_count += 1
+    if ud:
+        ud_count += 1
+
+print(f'P(prefix-free)        = {pf_count/n_sim:.4f}')
+print(f'P(uniquely decodable) = {ud_count/n_sim:.4f}')
